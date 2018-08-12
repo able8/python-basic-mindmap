@@ -1,0 +1,616 @@
+Python 扩展知识
+# Python 扩展知识
+
+# 1. 标准库概述
+- 计算机背景
+    - 硬件原理
+        - 内存、CPU、磁盘存储以及IO
+        - 计算机工作流程
+        - 指令的概念
+    - 操作系统
+        - 操作系统的进程管理：UID、PID、daemon
+        - 进程直接的信号通信
+        - 文件
+            - 文件管理和文件类型：os、shutil
+            - 文件读写接口IO：socket、select
+            - 文件的权限和其他文件信息
+        - 常用系统命令：ls mv rm mkdir chmod zip tar
+        - Linux Shell
+    - 网络
+        - TCP/IP 的基础分层架构
+        - 常用的应用层协议：http 邮件
+        - 了解 html/css/javascript/jQuery/frame
+    - 算法和数据结构
+    - 数据库
+    - 加密和文本编码
+- Python 增强
+    - 文字处理
+        - 正则表达式`re`
+        - sting/textwrap
+    - 数据对象
+        - 堆`heapq`
+        - 队列`Queue`
+    - 日期时间
+        - 时间`time`
+        - 日期和时间`datetime`
+        - 日历`calendar`
+    - 数学运算
+        - 随机数`random`
+        - 小数`decimal`
+        - 分数`fractions`
+        - 数学常数和数学函数`math`
+    - 存储
+        - `pickle` 输入或输出任意对象
+        - `shelve` 存储对象
+    - 数据库功能
+        - `sqlite3`
+        - `mysqldb`
+- 系统互动
+    - 运行控制：`sys`管理Python自身的运行环境
+    - 操作系统
+        - 管理系统进程
+        - 改变当前路径
+        - 关闭文件权限
+    - 文件系统
+        - `os/os.path` 文件／目录操作
+        - `shutil` 移动／复制文件
+        - `glob` 文件查找
+    - 线程与进程
+        - `threading` 多线程
+        - `multiprocessing` 多进程
+
+# 2. 正则表达式
+- 背景知识
+    - 正则表达式
+        - 用`单个字符串`来描述、匹配
+        - 一系列 匹配某个`句法规则`的字符串
+        - 可匹配文本片段的模式包括普通字符和特殊字符
+    - 原始字符串
+        - `r"..."` 定义正则表达式时，只使用`原始字符串`
+        - 注意区分 正则表达式特殊字符和ASCII特殊字符
+        - 如
+            - `\b`退格符
+            - `\\b`匹配单词边界
+            - `\d` 无对应`ASCII`字符，十进制数字
+- 元字符
+    - 通配符`.`
+        - 匹配任意字符除了换行符
+        - 使用`re.DOTALL/re.S`可以包括换行符
+    - 管道符`|`：如abc|123，匹配abc或123
+    - 定位符`^,$`
+        - `^Begin ... end$`
+        - 同`\A...\Z`
+        - `\b` 单词边界 单词开头
+        - `\B` 非单词边界
+    - 字符集
+        - `[...]` 任意一个在其中的字符
+        - `[x-y]` 指定`字符范围`
+        - `[^...]` 指定`排除字符集`
+    - 限定符
+        - 匹配表达式
+            - `*` 0或多次
+            - `+` 1或多次
+            - `？` 0或1次
+        - 多次
+            - `{n}` 精确匹配 n 次
+            - `{n,}` 至少 n次
+            - `{n, m}` n到m次
+    - 子模式 `()`
+    - 转义符 `\` 反斜杠转义
+- 转义字符
+    - vs
+        - `\w`字母数字和下划线`[a-zA-Z0-9_]`
+        - `\W`非字母数字和下划线
+    - vs
+        - `\s`任意空白字符`[\f\n\r\t\v]`
+        - `\S`任意非空白字符
+    - vs 
+        - `\d`任意数字`[0-9]`
+        - `\D`任意非数字`[^0-9]`
+- 常用函数
+    - `re.`
+        - compile 预编译：可显著提升效能
+            - 创建`模式对象`
+            - `(pattern[, flags])`
+        - search/match
+            - 查找模式／在字符串开头匹配模式
+            - `（pattern, sting[, flags]）`
+        - findall
+            - 所有与模式匹配的子串 列表
+            - `(pattern, string)`
+        - split
+            - 根据模式来 分割字符串
+            - `(pattern, sting[, maxplits=0])`
+        - sub
+           - 将字符串中与模式pat匹配的子串都替换为repl
+           - `(pat, repl, string[, count=0])`
+           - repl是需要替换的字符串，或处理函数
+        - escape
+            - 对字符串中，所有正则表达式特殊字符进行转义
+            - `(string)`
+            - 如`re.escape('www.jd.cn')`
+            -  `"www\\.jd\\.cn"`
+            -  `r"www\.jd\.cn"`
+    - 可选标志修饰符 `re.`
+        - 函数可选参数
+           - 修改 正则表达式`解读方式`
+           - `flags=` `re.I|re.M`
+        - `re.`
+            - I 对大小写不敏感 `Ignorecase`
+            - M 多行匹配 影响 `^$`
+            - S 匹配所有字符串 包括`换行符`
+            - U 根据`Unicode字符集`解析字符
+            - X 更灵活的格式
+               - 忽略空格
+               - 可按`可读性`自由组织 多行‘’‘
+               - 可添加注释`#`
+            
+- 匹配对象和编组
+    - `MatchObject`：re 匹配对象
+        - 包含 与模式匹配的子串信息
+        - 模式的哪部分与子串的哪部分匹配的信息
+    - 子串即`编组`：放在圆括号内的子模式
+    - 重要方法
+        - `.group([group1, ...])`
+           - 默认0表示整个模式
+           - 可以指定编号num的子组
+        - `.start/end`
+            - 与给定编组匹配的子串 起始／终止位置
+        - `.span([group])`
+            - 与给定编组匹配的子串 起始和终止
+- 自组捕获
+    - 普通捕获：`(...)`
+    - 非捕获
+        - `(?:pattern)` 
+            - 匹配 pattern 但不获取匹配结果
+            - 优化性能，不存储供以后使用
+            - 结果不需要返回也不会被 `$1` `$2` 之类的反向引用
+        - `(?!pattern)`
+            - 过滤条件
+            - 若符合pattern则将其过滤掉
+        - 前瞻／后瞻
+            - `(?=X)/(?!X)` 前瞻肯定式\否定式匹配
+            - `(?<=X)/(?<!X)` 后瞻肯定式\否定式匹配
+
+    - 命名捕获：`(?P<name>pattern)` `m.group('name')`
+    - 反向引用
+        - `\1...\9` 与`(...)`依次对应  原、新字符串
+        - `(?P=name)` 原字符串
+        - `\g<Num>, \g<name>` 新字符串
+    - 例子
+        - `re.search('(b)(?P<yeah>c)', 'abcde')`
+        - 子组
+            - `.group()`即`.group(0)` 为`'bc'`
+            - `.group(1)`即`.group('yeah')` 为`'b'`
+            - `.groups()` `('b', 'c')`
+
+# 3. 日期和时间
+- 基本概念
+    - 挂钟时间
+        -  从某个固定时间起点 到现在的时间间隔
+        -  计算机 只会维护`挂钟时间`
+    - 时间戳：从`1970.1.1` 经过了多长时间
+    - 时间间隔：以`秒`为单位的浮点小数
+    - 日期元组
+        -  0 1  2 3  4  5  6   7  8
+        - 年 月 日 时 分 秒 星期 ？ 夏令时
+- 时间格式
+    - %Y/y 年 4/2位数
+    - %m 月 01-12
+    - %d 日 01-31
+    - %H/I 24/12小时制
+    - %M/S 分／秒
+    - %a/A,%b/B,%c 简化／完整 星期／月份／日期 和时间
+    - %w 星期几0-6 星期天为第一天0
+    - %U/%W 每年第几周的第一天是 星期天／一
+    - %x/X 本地日期／时间
+    - %z 时区偏移量 +(-)HHMM
+    - %F `%Y-%m-%d`
+    - %D `%m%d%y`
+- time
+    - `asctime([tuple])`
+        - 将时间元组 转换为字符串
+    - `localtime([secs])`
+        - 将秒数转换为 表示当地时间的日期元组
+    - `mktime(tuple)`
+        - 将时间元组 转换为当地时间
+    - `sleep(sec)`
+        - 休眠（什么都不执行）sec秒
+    - `strptime(string[,fromat])`
+        - 将字符串 转换为时间元组 p为pointed 字符串指的时间元组
+    - `time()`
+        - 挂钟时间 秒
+    - `clock()`
+        - 测试程序运行时间 调用两次，相减
+        - 模块 `timeit` 计算代码执行时间
+    - `struct_time`对象
+        - 挂钟时间，年 月 日 时 分 秒。。。
+        - 属性：tm_year, tm_mon, tm_mday
+        - 函数 `time.`
+            - `gmtime()` UTC时间
+            - `localtime()` 当地时间
+            - `mktime(st)` 挂钟时间
+- datetime
+    - 包含：`date + time`
+    - 数据`类`
+        - `.date`类：日期 年 月 日
+        - `.time`类：时间 时 分 秒 毫秒
+        - `.datetime`
+            - 日期和时间
+            - 属性和方法 `now()` `.year/month/day/...`
+        - `.timedelta`
+            - 代表`时间间隔`
+            - 两个`datetime` 值之差 日 秒 毫秒
+            - 属性和方法 `.days/seconds/..`
+    - 日期格式
+        - str
+            - `str()`
+            - `strftime(format)`
+        - datetime
+            - `datetime.strptime(str, format)` 
+    - `calendar`模块
+        - `calendar.` `month(2016, 1)` 某月的月历
+
+# 4. 系统和文件
+- 解释器相关
+    - sys：访问多个 与`Python解释器`紧密相关的`变量和函数`
+    - `sys.`
+        - `argv` 命令行参数
+        - `exit([args])` 退出当前程序
+        - `modules`将模块名 映射到加载模块 -> 字典
+        - `path` 查找模块的目录 -> 列表
+        - `platform` 平台标识符
+        - `stdin/stdout/stderr` 标准输入／输出／错误流
+    - `sys.stdin`
+        - 管道重定向  `... | sys.stdin.read()`
+        - 可迭代 `for line in sys.stdin:`
+    - vs
+        - 文件对象
+        - 流：类似于文件的对象
+     
+- 读取多个文件
+    - `fileinput.` 迭代 多个文本或流的内容行
+        - `input()`
+            - `([files[, inplace[,backup]]])`
+            - 帮助迭代 多个`输入流` 中的行
+        - `filename()`当前文件的名称
+        - `lineno()` 返回当前行号（累计的）
+        - `filelineno()` 返回在当前文件中的行号
+        - `isfirstline()` 检查当前行是否是文件中的第一行
+        - `isstdin()`检查最后一行是否来自`sys.stdin`
+        - `nextfile()`关闭当前文件 并移到下一个文件
+        - `close()`关闭整个文件链 并结束迭代
+- 文件管理
+    - `os.`
+        - 文件操作
+            - `remove(path)` 删除path指向的文件
+            - `rename(src, dst)`
+            - `walk()`目录树下所有文件名
+        - 目录操作
+            - `getcwd()`
+            - `chdir()`
+            - `mkdir(path)`创建新目录
+            - `rmdir(path)`删除目录
+            - `listdir(path)`返回目录中所有文件
+        - 访问权限
+            - `access()`
+            - `chmod(path, mode)`
+            - `chown(path, uid, gid)`改变文件拥有者和拥有组
+            - `stat(path)`文件附加信息 类似 ls -l
+            - `symlink(src, dst)` 为dst创建软链接
+    - `shutil.`
+        - `copy(src, dst)`复制文件
+        - `move(src, dst)`移到文件
+- 路径／文件
+    - `os.path`
+        - 路径切分
+            - `basename()`文件名
+            - `dirname()`路径名
+            - `join()`将所给字符串 组成路径名
+            - `split()`返回元组`(dirname(), basename())`
+        - 文件信息
+            - `getatime()` 最近访问时间
+            - `getctime()` 创建
+            - `getmtime()` 修改
+            - `getsize()` 大小 字节
+        - 路径判断
+            - `exists()` 路径是否存在
+            - `isabs/isdir/isfile()` 是否是 绝对路径／目录／文件
+            - `commonprefix([path1, path2,...])` 多个路径的共同部分
+    - `glob.glob()`
+        - Linux式的`文件名格式表达式`
+        - `*` 任意 0 到 多个字符
+        - `？` 任意一个字符
+        - `print(glob.glob('path/*'))`
+- 系统服务
+    - `os.` 访问多个 与 `操作系统`关系密切的`变量和函数`
+        - eviron 包含`环境变量`的映射
+        - `system(cmd)`
+            - 执行操作系统命令
+            - 用于运行外部程序
+        - 分割符
+           - sep 路径中使用的分隔符
+           - pathsep 分隔不同路径的分隔符
+           - linesep 行分隔符`\n \r \r\n
+           
+- 存储对象
+    - 序列化
+        - 内存中的对象 ->  文件（磁盘）
+        - 基本类型复杂对象 -> 二进制数据集合
+    - `pickle`
+        - 存储
+            - 序列化：将内存中的对象转换成文本流
+            - 存入文件：`f.write(pickle.dumps(obj))`
+        - 加载
+            - 读取文本 转换为 对象
+            - `obj = pickle.loads(f.read())`
+        - 应用于
+            - 简单、递归 对象
+            - 被多次引用的对象
+            - 用户定义的类核实例：程序中必须要先定义类
+        - `cPickle`
+            - 功能同上，但速度快
+            - `improt cPickle as pickle`
+    - `shelve`
+        - 简单存储方案：创建永久性映射
+            - 类似`字典操作`
+            - 键必须为`字符串`
+        - 创建`shelf对象`
+           - `s = shelve.open(file)`
+        - 操作完毕并`存盘`
+           - `s.close()`
+
+# 5. 进程和线程
+- 概述
+    - 操作系统
+        - 支持`多任务`，CPU只能 顺序执行代码，让各个任务 交替执行
+        - 真正的`并行执行`
+            - 多任务 只能在`多核CPU`上实现
+            - 但由于任务数量 远远多于 CPU 核心数量
+            - 系统自动把任务 轮流调度到 每个核心上执行
+    - 进程和线程
+        - 一个任务就是一个`进程` Process
+        - 一个`进程`内部 同时运行多个`子任务` 即`线程` `Thread`
+        - 特点
+           - 一个进程至少有一个线程
+           - 线程时最小的`执行单元`
+           - 执行方式，将多个线程／进程 快速切换，交替运行
+    - Python 执行多任务
+        - 多进程模式
+           - 启动多个进程，每个进程只有一个线程
+        - 多线程模式
+            - 启动一个进程，一个进程内启动多个线程
+        - 多进程+多线程模式
+            - 模型更复杂，实际很少采用
+- 多进程
+    - Unix/Linux
+        - 操作系统方式 fork()
+            - 调用一次
+            - 返回2次，父进程返回 子进程的ID，子进程返回0
+        - Pyhton模块 os
+           - `os.getpid()` 返回父进程的ID
+           - `os.fork()`返回子进程的ID
+    - 跨平台
+        - 模块`multiprocessing` Process 类 代表一个`进程对象`
+        - 使用方法
+           - `from multiprocessing import Process`
+           - 创建一个Process实例，`p = Process(target=, args=)` 传入 执行函数和函数参数
+           - `p.start()` 启动
+           - `p.join()` 等待子进程结束后 继续往下运行
+         - Pool
+             - 批量创建子进程
+             - `from multiprocessing import Pool`
+             - `p = Pool(num)` 最多同时执行num个进程，默认为cpu核心数
+             - `p.apply_async(FUN, args)` 继续添加 新的Process
+             - `p.close()` 不能再添加新的Process
+             - `p.join()` 等待所有`子进程`执行完毕
+    - 进程间通信 方式
+        - Queue
+            - `from multiprocessing import Process, Queue`
+            - `q = Queue()`
+            - `q.put(value)`
+            - `value = q.get()`
+        - Pipes
+        - ...
+    - 分布式进程：`multiprocessing.managers`
+- 多线程
+    - 模块
+        - `thread` 底层模块
+        - `threading`高级模块，对`thread`模块进行封装
+    - 启动
+        - 创建`Thread`实例，传入执行函数
+        - `t = thrading.Thread(target=, name=)`
+        - `t.start()`
+        - `t.join()`
+    - 释义
+        - 主线程，MainThread 任何进程默认启动一个线程
+        - 子线程，名字在创建时指定
+        - 当前线程 `threading.current_thread().name`
+    - 锁
+        - vs
+            - 多进程
+                - 同一个变量 各自有一份拷贝
+                - 存在于每个进程中 互不影响
+            - 多线程
+                - 所有变量 由所有线程共享
+                - 任何一个变量 可以被任何一个线程改变
+                - 线程之间共享数据 多个线程同时改一个变量很危险
+        - 创建锁
+            - `lock = threading.Lock()`
+            - `lock.acquire()` 获取锁
+            - `lock.release()` 释放锁 避免`死线程`
+            - 用`try:... finally` 来确保`锁一定会被释放`
+    - 多核`CPU`
+        - Python 解释器，GIL锁 只能用到1个核
+        - 要实现多核任务，不能利用多线程，要用多进程，独立GIL锁
+    - `ThreadLoal`
+        - 创建`obj = threading.local()`
+        - 使用`obj.attr= ...` 每个线程都可以读写，互不影响
+        - 如：为每个线程绑定数据库连接、HTTP请求等
+    - 注意
+        - 当模型复杂，容易发生冲突时，必须用锁 加以隔离
+        - 小心`死锁` ，即多个线程挂起，无法执行和结束
+- 总结
+    - vs
+        - 多进程
+            - 优点 稳定性高
+            - 缺点 创建进程代价大
+        - 多线程
+            - 优点 效率更高
+            - 缺点 稳定性差
+    - 任务性质
+        - 计算密集型
+            - CPU资源 消耗大
+            - 代码运行效率很重要，最好用`C语言`这用效率型语言
+            - 同时进行的任务数量应当等于CPU核心数，减少任务切换时间
+        - IO密集型
+            - CPU资源 消化少
+            - 代码运行效率不重要，最好用`脚本语言`，开发效率高
+            - 大部分时间都在等待IO完成
+            - 任务越多，CPU效率越高
+    - 异步IO：事件驱动模型
+
+
+# 6. 数据库操作
+- 基本概念
+    - 表
+        - 数据库中 存放关系数据的集合
+        - 表和表之间 通过`外键`关联
+    - Python DB-API：标准数据库接口
+        - 一种连接到SQL数据库的`标准化方式`
+        - 定义都是通用的，操作代码很相似
+- Python 数据库 API
+    - 全局变量
+        - `apilevel` 使用的Pythn DB API版本
+        - `threadsafety` 模块的线程安全程度如何
+        - `paramstyle` 参数风格，在SQL查询中使用哪种参数风格
+    - 类型：定义类一些构造函数和变量，用于提供`特殊的类型和值`
+    - 连接和游标
+        - `connect` 参数
+            - dsn 数据源名称
+            - user 用户名
+            - password
+            - host 
+            - database 数据库
+        - 连接对象 方法
+            - `.close()`关闭连接对象
+            - `.commit()`提交未提交的事务
+            - `.rollback()`回滚未提交的事务
+            - `.cursor()`返回连接的游标对象
+        - 游标对象
+            - `close()` 关闭游标
+            - `execute/executemany()` 执行SQL操作
+            - `fetchone/fetchmany/fetchall()`获取查询结果
+            - `nextset()`跳到下一个结果集
+            - `description` 由结果列描述组成的序列
+            - `rowcount` 结果包含的行数
+            - `arraysize`fetchmany返回的行数，默认1
+    - 异常: `StandardError`所有异常的超类
+        - Warning：非致命问题
+        - Error：所有错误条件的超类
+            - InterfaceError：与接口相关的错误
+            - DatabaseError：与数据库相关的错误的超类
+                - DataError
+                - OperationalError
+                - IntegrityError
+                - InteralError
+                - ProgrammingError
+                - NotSupportedError
+    
+- SQLite
+    - 内涵
+        - 内置 可以直接使用
+        - 嵌入式数据库，轻量级
+        - 数据库即`一个磁盘上的*.db文件`，方便移动或复制
+    - 操作
+        - `conn = sqlite3.connect('test.db')` 不存在则创建
+        - `cursor = conn.cursor()`
+        - `cursor.execute(...)`
+           - 执行一条SQL语句
+           - `cursor.rowcount` 获得插入的行数
+           - `cursor.fetchall()`获取查询结果集
+        - `cursor.close()`关闭cursor
+        - `conn.commit()`提交事务
+        - `conn.close()`关闭connection
+    - 注意
+        - 确保 Connection 和 Cursor对象正确关闭
+        - 使用`try:... except: ... finally: ... `
+
+- 数据库使用流程
+    - 引入`API`模块
+    - 获取与数据库的连接
+    - 执行SQL语句 和 存储过程
+    - 关闭数据库连接
+
+# 7. 数学运算和数据结构
+## 数学运算`math`
+- 数值
+    - `.pi`
+    - `.e`
+- 取整
+    - `.ceil(x)`
+    - `.floor(x)`
+- 对数
+    - `log(x)` e 为底
+    - `log10(x)` 10 为基
+- `degrees(x)` 弧度 -》 角度
+- `radians(x)` 角度 -》 弧度
+
+## 数据结构
+- `heapq` 
+    - heap queue algorithm／ priority queue
+    - 优先队列
+        - 以`任意顺序`添加对象
+        - 随时找出`并删除`最小的元素
+    - 特征：位于i处的元素 总是大于 位于`i//2`处的元素
+    - `heapq.`
+        - `heapify(list)`让`列表`具备`堆特征`
+        - `heappush(heap,x)`将x压入堆中
+        - `heappop(headp)`从堆中弹出最小的元素
+        - `heapreplace(heap,x)`弹出最小，并将x压入，比上面的效率高
+        - `nlargest(n,iter)` 返回iter中n个最大的元素
+        - `nsmallest(n,iter)`返回iter中n个最小的元素
+    
+- `deque` 双端队列
+    - 应用于 需要按`添加元素的顺序`进行删除时
+    - `import collections`
+    - `q = collections.deque(iter_obj)` 创建对象
+    - `q.append/pop()`在队尾巴（右端） 添加／弹出元素
+    - `q.appendleft/popleft`在队首（左端）添加／弹出元素
+    - `q.rotate()`将元素向右或左移动，并在到达一端时，环绕到另一端
+    - `q.extend/extendleft()`
+
+## 集合类
+- collections: 集合模块，提供一些有用的集合类
+- namedtuple
+    - `Point = namedtuple('Point', ['x', 'y'])`
+    - `p = Point(1,2)`
+    - `p.x为1` `p.y为2`
+- defaultdict
+    - key 不存在时返回默认值
+    - `dd = defaultdict(lambda: 'N/A')`
+- OrderedDict
+    - key 按照插入的顺序排列
+    - 可以用来实现一个
+        - FIFO 先进先出的dict
+        - 当容量超出限制，最早添加的key 先删除
+- Counter
+    - 简单计数器 `c = Counter()`
+    - `c[a] += 1`
+## 随机数
+- `random.`
+    - `seed(x)`：改变随机数生成器种子
+    - 随机实数
+        - `random()`[0,1)
+        - `uniform(a,b)`[a, b]
+        - `randrange([start], stop, [step]`
+    - 随机挑选和排序
+        - `choice(seq)`随机选择一个元素
+        - `sample(seq, k)`随机选择k个值不同的元素
+        - `shuffle(seq[,random])`乱序
+- vs
+    - random 伪随机数
+    - 真正随机数 os.urandom 和 random中的SystemRandom类
+
+
+
