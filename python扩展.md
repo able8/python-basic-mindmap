@@ -9,7 +9,7 @@ Python 扩展知识
         - 指令的概念
     - 操作系统
         - 操作系统的进程管理：UID、PID、daemon
-        - 进程直接的信号通信
+        - 进程直间的信号通信
         - 文件
             - 文件管理和文件类型：os、shutil
             - 文件读写接口IO：socket、select
@@ -26,9 +26,9 @@ Python 扩展知识
 - Python 增强
     - 文字处理
         - 正则表达式`re`
-        - sting/textwrap
+        - string/textwrap
     - 数据对象
-        - 堆`heapq`
+        - 堆队列`heapq`
         - 队列`Queue`
     - 日期时间
         - 时间`time`
@@ -90,7 +90,7 @@ Python 扩展知识
         - 匹配表达式
             - `*` 0或多次
             - `+` 1或多次
-            - `？` 0或1次
+            - `?` 0或1次
         - 多次
             - `{n}` 精确匹配 n 次
             - `{n,}` 至少 n次
@@ -120,7 +120,7 @@ Python 扩展知识
             - `(pattern, string)`
         - split
             - 根据模式来 分割字符串
-            - `(pattern, sting[, maxplits=0])`
+            - `(pattern, sting[, maxsplits=0])`
         - sub
            - 将字符串中与模式pat匹配的子串都替换为repl
            - `(pat, repl, string[, count=0])`
@@ -513,7 +513,7 @@ Python 扩展知识
                 - DataError
                 - OperationalError
                 - IntegrityError
-                - InteralError
+                - InternalError
                 - ProgrammingError
                 - NotSupportedError
     
