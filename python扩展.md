@@ -1,16 +1,6 @@
 Python 扩展知识
 # Python 扩展知识
 
-- [1. 标准库概述](#1------)
-- [2. 正则表达式](#2------)
-- [3. 日期和时间](#3------)
-- [4. 系统和文件](#4------)
-- [5. 进程和线程](#5------)
-- [6. 数据库操作](#6------)
-- [7. 数学运算和数据结构](# 7. 数学运算和数据结构)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
 # 1. 标准库概述
 - 计算机背景
     - 硬件原理
