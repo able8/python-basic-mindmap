@@ -7,7 +7,7 @@ Python 扩展知识
 - [4. 系统和文件](#4------)
 - [5. 进程和线程](#5------)
 - [6. 数据库操作](#6------)
-- [7. 数学运算和数据结构](#7----------)
+- [7. 数学运算和数据结构](# 7. 数学运算和数据结构)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
