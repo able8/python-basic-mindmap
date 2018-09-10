@@ -2,8 +2,7 @@
 
 > 整理自 [woaielf.github.io](http://woaielf.github.io)
 
-因**PDF版思维导图**浏览方便，但详细阅读起来不够清晰和顺畅，
-所以重新整理为makrdown版本，方便自上而下阅读。
+因**PDF版**不适合详细阅读，故整理为makrdown版，方便自上而下阅读。
 
 ## [python 扩展知识](python扩展.md)
 
